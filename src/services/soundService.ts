@@ -29,6 +29,13 @@ class SoundService {
         this.sounds.set(key, audio);
       });
       this.speechSynthesis = window.speechSynthesis;
+      
+      // Ensure voices are loaded (some browsers load them asynchronously)
+      if (this.speechSynthesis?.onvoiceschanged !== undefined) {
+        this.speechSynthesis.onvoiceschanged = () => {
+          console.log('Voices loaded:', this.speechSynthesis?.getVoices().length);
+        };
+      }
     }
   }
 
