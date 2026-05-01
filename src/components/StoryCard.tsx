@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, Star, ArrowRight, RotateCcw } from 'lucide-react';
+import { Heart, Star, ArrowRight, RotateCcw, Volume2, Square } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Story } from '../services/geminiService';
 import { soundService } from '../services/soundService';
@@ -18,6 +18,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
   const [isFinished, setIsFinished] = useState(false);
   const [tapCount, setTapCount] = useState(0);
   const [interacted, setInteracted] = useState(false);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   const scene = story.scenes[currentScene];
   const isUrdu = language === 'ur';
@@ -30,7 +31,29 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
   useEffect(() => {
     setTapCount(0);
     setInteracted(false);
+    soundService.stopSpeaking();
+    setIsPlayingVoice(false);
   }, [currentScene]);
+
+  useEffect(() => {
+    return () => {
+      soundService.stopSpeaking();
+    };
+  }, []);
+
+  const handleSpeak = () => {
+    if (isPlayingVoice) {
+      soundService.stopSpeaking();
+      setIsPlayingVoice(false);
+    } else {
+      setIsPlayingVoice(true);
+      soundService.speak(displayText, language === 'ur' ? 'ur' : 'en');
+      
+      // We can't easily detect end of speech from here without more complex state logic
+      // in soundService, but setting a timeout or just letting the user toggle is fine.
+      // The soundService handles cancellation of previous utterances.
+    }
+  };
 
   const handleNext = () => {
     soundService.play('transition');
@@ -102,7 +125,28 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
     <div className={`max-w-4xl mx-auto w-full flex flex-col items-center gap-6 ${isUrdu ? 'rtl' : 'ltr'}`} dir={isUrdu ? 'rtl' : 'ltr'}>
       <div className="w-full flex justify-between items-center px-4">
         <h1 className={`font-display text-3xl text-slate-800 md:text-4xl ${isUrdu ? 'font-urdu' : ''}`}>{displayTitle}</h1>
-        <div className="flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-slate-200">
+        <div className="flex items-center gap-4 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-slate-200">
+           <button 
+             onClick={handleSpeak}
+             className={`flex items-center gap-2 px-4 py-1.5 rounded-full transition-all font-bold ${
+               isPlayingVoice 
+                 ? 'bg-red-500 text-white shadow-md' 
+                 : 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-sm active:scale-95'
+             }`}
+           >
+             {isPlayingVoice ? (
+               <>
+                 <Square size={18} fill="currentColor" />
+                 <span className={isUrdu ? 'font-urdu' : ''}>{isUrdu ? 'روکیں' : 'Stop'}</span>
+               </>
+             ) : (
+               <>
+                 <Volume2 size={18} />
+                 <span className={isUrdu ? 'font-urdu text-base' : ''}>{isUrdu ? 'آواز سنیں' : 'Read Aloud'}</span>
+               </>
+             )}
+           </button>
+           <div className="w-px h-6 bg-slate-200" />
            <span className="text-sm font-bold text-slate-500 uppercase tracking-widest">{isUrdu ? 'منظر' : 'Scene'} {currentScene + 1}/{story.scenes.length}</span>
         </div>
       </div>

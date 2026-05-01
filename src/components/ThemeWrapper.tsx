@@ -15,28 +15,28 @@ const ThemeWrapper: React.FC<ThemeWrapperProps> = ({ theme, children }) => {
           bg: 'bg-forest-secondary',
           accent: 'border-forest-primary',
           overlay: 'bg-forest-primary/5',
-          decoration: '🌲🌳🍃',
+          decoration: '🍃🌿✨🌳',
         };
       case 'sea':
         return {
           bg: 'bg-sea-secondary',
           accent: 'border-sea-primary',
           overlay: 'bg-sea-primary/5',
-          decoration: '🌊🐚🐠',
+          decoration: '🫧🫧🐚🌊',
         };
       case 'car':
         return {
           bg: 'bg-car-secondary',
           accent: 'border-car-primary',
           overlay: 'bg-car-primary/5',
-          decoration: '🚗🚙🚦',
+          decoration: '✨⚡️🚦💨',
         };
       default:
         return {
           bg: 'bg-slate-50',
           accent: 'border-slate-400',
           overlay: '',
-          decoration: '✨',
+          decoration: '✨🌟💫',
         };
     }
   };
@@ -71,7 +71,7 @@ const ThemeWrapper: React.FC<ThemeWrapperProps> = ({ theme, children }) => {
               fontSize: `${1 + Math.random() * 2}rem`
             }}
           >
-            {styles.decoration.split('')[Math.floor(Math.random() * 3)]}
+            {Array.from(styles.decoration)[Math.floor(Math.random() * Array.from(styles.decoration).length)]}
           </motion.div>
         ))}
       </div>

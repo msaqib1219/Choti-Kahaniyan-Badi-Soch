@@ -18,6 +18,8 @@ class SoundService {
   private bgmAudio: HTMLAudioElement | null = null;
   private currentBgmTheme: string | null = null;
   private isMuted: boolean = false;
+  private speechSynthesis: SpeechSynthesis | null = null;
+  private currentUtterance: SpeechSynthesisUtterance | null = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -26,6 +28,47 @@ class SoundService {
         audio.preload = 'auto';
         this.sounds.set(key, audio);
       });
+      this.speechSynthesis = window.speechSynthesis;
+    }
+  }
+
+  speak(text: string, lang: 'en' | 'ur' = 'en') {
+    if (this.isMuted || !this.speechSynthesis) return;
+
+    this.stopSpeaking();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Better voice detection
+    const voices = this.speechSynthesis.getVoices();
+    
+    if (lang === 'ur') {
+      utterance.lang = 'ur-PK';
+      // Find Urdu voice
+      const urduVoice = voices.find(v => v.lang.startsWith('ur'));
+      if (urduVoice) utterance.voice = urduVoice;
+      utterance.pitch = 1.0;
+      utterance.rate = 0.85; // Slightly slower for clarity
+    } else {
+      utterance.lang = 'en-US';
+      const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
+      if (englishVoice) utterance.voice = englishVoice;
+      utterance.pitch = 1.1; // Friendly higher pitch
+      utterance.rate = 0.9;
+    }
+
+    this.currentUtterance = utterance;
+    this.speechSynthesis.speak(utterance);
+    
+    utterance.onend = () => {
+      this.currentUtterance = null;
+    };
+  }
+
+  stopSpeaking() {
+    if (this.speechSynthesis) {
+      this.speechSynthesis.cancel();
+      this.currentUtterance = null;
     }
   }
 
