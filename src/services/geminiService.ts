@@ -4,10 +4,13 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
 
 export interface Story {
   title: string;
+  titleUrdu?: string;
   scenes: Array<{
     text: string;
+    textUrdu?: string;
     action: {
       instruction: string;
+      instructionUrdu?: string;
       type: 'tap' | 'multi-tap' | 'sequence';
       count?: number;
       targetDesc: string;
@@ -16,6 +19,7 @@ export interface Story {
     imagePrompt: string;
   }>;
   moral: string;
+  moralUrdu?: string;
   level: string;
 }
 

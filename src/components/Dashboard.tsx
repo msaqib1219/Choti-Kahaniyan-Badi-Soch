@@ -1,15 +1,17 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ThemeType, AgeLevel, UserStats } from '../types';
-import { Heart, Star, Sparkles, BookOpen } from 'lucide-react';
+import { ThemeType, AgeLevel, UserStats, LanguageType } from '../types';
+import { Heart, Star, Sparkles, BookOpen, Globe } from 'lucide-react';
 import { soundService } from '../services/soundService';
 
 interface DashboardProps {
   stats: UserStats;
   selectedAge: AgeLevel;
   selectedTheme: ThemeType;
+  selectedLanguage: LanguageType;
   onSelectAge: (age: AgeLevel) => void;
   onSelectTheme: (theme: ThemeType) => void;
+  onSelectLanguage: (lang: LanguageType) => void;
   onStartStory: () => void;
   loading: boolean;
 }
@@ -18,37 +20,52 @@ const Dashboard: React.FC<DashboardProps> = ({
   stats, 
   selectedAge, 
   selectedTheme, 
+  selectedLanguage,
   onSelectAge, 
   onSelectTheme, 
+  onSelectLanguage,
   onStartStory,
   loading
 }) => {
+  const isUrdu = selectedLanguage === 'ur';
+
+  const t = {
+    car: isUrdu ? 'تیز گاڑیاں' : 'Fast Cars',
+    forest: isUrdu ? 'جادوئی جنگل' : 'Magical Forest',
+    sea: isUrdu ? 'گہرا نیلا سمندر' : 'Deep Blue Sea',
+    subtitle: isUrdu ? 'آج ہم کونسی کہانی پڑھیں گے؟' : 'Which adventure should we go on today?',
+    ageSection: isUrdu ? 'میری عمر' : 'My Age',
+    themeSection: isUrdu ? 'جادوئی دنیا' : 'Magic World',
+    loading: isUrdu ? 'کتاب کھل رہی ہے...' : 'Opening Book...',
+    start: isUrdu ? 'چلو چلیں!' : "Let's Go!"
+  };
+
   const themes: { id: ThemeType; label: string; icon: string; color: string }[] = [
-    { id: 'car', label: 'Fast Cars', icon: '🚗', color: 'bg-car-primary' },
-    { id: 'forest', label: 'Magical Forest', icon: '🌲', color: 'bg-forest-primary' },
-    { id: 'sea', label: 'Deep Blue Sea', icon: '🐠', color: 'bg-sea-primary' },
+    { id: 'car', label: t.car, icon: '🚗', color: 'bg-car-primary' },
+    { id: 'forest', label: t.forest, icon: '🌲', color: 'bg-forest-primary' },
+    { id: 'sea', label: t.sea, icon: '🐠', color: 'bg-sea-primary' },
   ];
 
   const ages: AgeLevel[] = ['2-3', '4-5', '6-8'];
 
   return (
-    <div className="flex flex-col gap-12 max-w-5xl mx-auto w-full">
+    <div className={`flex flex-col gap-12 max-w-5xl mx-auto w-full ${isUrdu ? 'rtl font-urdu' : 'ltr'}`} dir={isUrdu ? 'rtl' : 'ltr'}>
       {/* Header / Stats */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="text-center md:text-left">
           <div className="flex items-center gap-4 mb-2 justify-center md:justify-start">
-             <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-4xl border-b-4 border-slate-200">
+             <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-4xl border-b-4 border-slate-200 font-emoji">
                📖
              </div>
              <div>
                <h1 className="font-display text-5xl md:text-6xl text-slate-800">Nanhi Dastaanain</h1>
-               <div className="flex flex-col text-slate-500 font-bold text-xs tracking-wider uppercase mt-1">
-                 <span>Choti Kahaniyan, Badi Soch</span>
-                 <span>Little Stories, Big Dreams</span>
+               <div className={`flex flex-col text-slate-500 font-bold text-xs tracking-wider uppercase mt-1 ${isUrdu ? 'font-urdu' : ''}`}>
+                 <span>{isUrdu ? 'چھوٹی کہانیاں، بڑی سوچ' : 'Choti Kahaniyan, Badi Soch'}</span>
+                 <span>{isUrdu ? 'ننی داستانیں، بڑے خواب' : 'Little Stories, Big Dreams'}</span>
                </div>
              </div>
           </div>
-          <p className="text-xl text-slate-600 font-medium ml-20 hidden md:block">Which adventure should we go on today?</p>
+          <p className="text-xl text-slate-600 font-medium ml-0 md:ml-20 hidden md:block">{t.subtitle}</p>
         </div>
         
         <div className="flex gap-4">
@@ -62,12 +79,38 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </div>
+      
+      {/* Language Toggle */}
+      <div className="flex justify-center -mb-4">
+        <div className="bg-white/80 p-2 rounded-2xl shadow-lg flex gap-2 border-b-4 border-slate-200">
+           <button
+             onClick={() => onSelectLanguage('en')}
+             className={`px-8 py-3 rounded-xl font-bold transition-all ${
+               selectedLanguage === 'en' 
+                 ? 'bg-indigo-500 text-white shadow-md' 
+                 : 'text-slate-500 hover:bg-slate-100'
+             }`}
+           >
+             English
+           </button>
+           <button
+             onClick={() => onSelectLanguage('ur')}
+             className={`px-8 py-3 rounded-xl font-bold font-urdu text-xl transition-all ${
+               selectedLanguage === 'ur' 
+                 ? 'bg-indigo-500 text-white shadow-md' 
+                 : 'text-slate-500 hover:bg-slate-100'
+             }`}
+           >
+             اردو
+           </button>
+        </div>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-8 mt-4">
         {/* Age Selection */}
         <section className="bg-white/60 backdrop-blur-sm p-8 rounded-[2rem] border-2 border-white shadow-inner">
            <h2 className="font-display text-3xl mb-6 text-slate-700 flex items-center gap-3">
-             <BookOpen size={32} className="text-blue-500" /> My Age
+             <BookOpen size={32} className="text-blue-500" /> {t.ageSection}
            </h2>
            <div className="grid grid-cols-3 gap-4">
               {ages.map((age) => (
@@ -92,7 +135,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Theme Selection */}
         <section className="bg-white/60 backdrop-blur-sm p-8 rounded-[2rem] border-2 border-white shadow-inner">
            <h2 className="font-display text-3xl mb-6 text-slate-700 flex items-center gap-3">
-             <Sparkles size={32} className="text-yellow-500" /> Magic World
+             <Sparkles size={32} className="text-yellow-500" /> {t.themeSection}
            </h2>
            <div className="grid grid-cols-3 gap-4">
               {themes.map((theme) => (
@@ -108,8 +151,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                       : 'bg-white text-slate-600 border-slate-100 hover:border-slate-200 shadow-md'
                   }`}
                 >
-                  <span className="text-4xl">{theme.icon}</span>
-                  <span className="font-bold text-sm tracking-tight">{theme.label}</span>
+                  <span className="text-4xl font-emoji">{theme.icon}</span>
+                  <span className={`font-bold text-sm tracking-tight ${isUrdu ? 'text-lg' : ''}`}>{theme.label}</span>
                 </button>
               ))}
            </div>
@@ -133,14 +176,15 @@ const Dashboard: React.FC<DashboardProps> = ({
           {loading ? (
             <>
               <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-              Opening Book...
+              {t.loading}
             </>
           ) : (
             <>
-              Let's Go!
+              {t.start}
               <motion.span 
                 animate={{ x: [0, 5, 0] }} 
                 transition={{ repeat: Infinity, duration: 1 }}
+                className="font-emoji"
               >
                 🌈
               </motion.span>
@@ -160,8 +204,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               badge.unlocked ? 'bg-white border-yellow-400 text-yellow-700' : 'bg-slate-200/50 border-transparent text-slate-400 grayscale'
             }`}
           >
-            <span className="text-2xl">{badge.icon}</span>
-            <span className="font-bold text-sm">{badge.name}</span>
+            <span className="text-2xl font-emoji">{badge.icon}</span>
+            <span className={`font-bold text-sm ${isUrdu ? 'text-base font-urdu' : ''}`}>
+              {isUrdu && badge.nameUrdu ? badge.nameUrdu : badge.name}
+            </span>
           </div>
         ))}
       </div>

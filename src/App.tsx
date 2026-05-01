@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ThemeWrapper from './components/ThemeWrapper';
 import Dashboard from './components/Dashboard';
 import StoryCard from './components/StoryCard';
-import { ThemeType, AgeLevel, UserStats, INITIAL_BADGES } from './types';
+import { ThemeType, AgeLevel, UserStats, INITIAL_BADGES, LanguageType } from './types';
 import { generateStory, Story } from './services/geminiService';
 import { soundService } from './services/soundService';
 import { Volume2, VolumeX } from 'lucide-react';
@@ -22,6 +22,7 @@ export default function App() {
 
   const [selectedAge, setSelectedAge] = useState<AgeLevel>('4-5');
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>('forest');
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('en');
   const [currentStory, setCurrentStory] = useState<Story | null>(null);
   const [loading, setLoading] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -84,14 +85,17 @@ export default function App() {
           stats={stats}
           selectedAge={selectedAge}
           selectedTheme={selectedTheme}
+          selectedLanguage={selectedLanguage}
           onSelectAge={setSelectedAge}
           onSelectTheme={setSelectedTheme}
+          onSelectLanguage={setSelectedLanguage}
           onStartStory={handleStartStory}
           loading={loading}
         />
       ) : (
         <StoryCard
           story={currentStory}
+          language={selectedLanguage}
           onComplete={handleStoryComplete}
           onExit={() => setCurrentStory(null)}
         />
