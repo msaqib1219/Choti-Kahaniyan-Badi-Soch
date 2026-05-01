@@ -11,7 +11,7 @@ interface DashboardProps {
   onSelectAge: (age: AgeLevel) => void;
   onSelectTheme: (theme: ThemeType) => void;
   onStartStory: () => void;
-  isGenerating: boolean;
+  loading: boolean;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ 
@@ -21,7 +21,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onSelectAge, 
   onSelectTheme, 
   onStartStory,
-  isGenerating
+  loading
 }) => {
   const themes: { id: ThemeType; label: string; icon: string; color: string }[] = [
     { id: 'car', label: 'Fast Cars', icon: '🚗', color: 'bg-car-primary' },
@@ -114,15 +114,15 @@ const Dashboard: React.FC<DashboardProps> = ({
             soundService.play('sparkle');
             onStartStory();
           }}
-          disabled={isGenerating}
+          disabled={loading}
           className={`group flex items-center gap-4 px-16 py-6 rounded-full font-display text-4xl shadow-2xl transition-all relative overflow-hidden ${
-             isGenerating ? 'bg-slate-400 cursor-wait' : 'bg-green-500 hover:bg-green-600 text-white'
+             loading ? 'bg-slate-400 cursor-wait' : 'bg-green-500 hover:bg-green-600 text-white'
           }`}
         >
-          {isGenerating ? (
+          {loading ? (
             <>
               <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-              Building Magic...
+              Opening Book...
             </>
           ) : (
             <>

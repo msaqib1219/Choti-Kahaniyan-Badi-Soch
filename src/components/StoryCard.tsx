@@ -112,13 +112,10 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, onComplete, onExit }) => {
                initial={{ scale: 1.1, opacity: 0.5 }}
                animate={{ scale: 1, opacity: 1 }}
                transition={{ duration: 1.5 }}
-               src={`https://img.api.studio/v1/image/generate?prompt=${encodeURIComponent(scene.imagePrompt)}&width=1200&height=800&aspectRatio=16:9`}
+               src={`https://picsum.photos/seed/${encodeURIComponent(story.title + currentScene)}/1200/800`}
                alt={scene.imagePrompt}
                className="w-full h-full object-cover"
                referrerPolicy="no-referrer"
-               onError={(e) => {
-                 (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(scene.imagePrompt)}/1200/800`;
-               }}
              />
              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
              

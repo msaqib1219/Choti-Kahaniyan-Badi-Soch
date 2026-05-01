@@ -4,6 +4,10 @@ import Dashboard from './components/Dashboard';
 import StoryCard from './components/StoryCard';
 import { ThemeType, AgeLevel, UserStats, INITIAL_BADGES } from './types';
 import { generateStory, Story } from './services/geminiService';
+import { soundService } from './services/soundService';
+import { Volume2, VolumeX } from 'lucide-react';
+
+import { PREBUILT_STORIES } from './data/prebuiltStories';
 
 export default function App() {
   const [stats, setStats] = useState<UserStats>(() => {
@@ -19,27 +23,31 @@ export default function App() {
   const [selectedAge, setSelectedAge] = useState<AgeLevel>('4-5');
   const [selectedTheme, setSelectedTheme] = useState<ThemeType>('forest');
   const [currentStory, setCurrentStory] = useState<Story | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    soundService.updateBGM(selectedTheme as any);
+  }, [selectedTheme]);
 
   useEffect(() => {
     localStorage.setItem('heroic_hearts_stats', JSON.stringify(stats));
   }, [stats]);
 
-  const handleStartStory = async () => {
-    setIsGenerating(true);
-    try {
-      // Rotate core values for variety
-      const values = ['Helping each other', 'Sharing toys', 'Taking turns', 'Being kind to animals', 'Saying Thank You'];
-      const randomValue = values[Math.floor(Math.random() * values.length)];
-      
-      const story = await generateStory(selectedAge, selectedTheme, randomValue);
+  const toggleSound = () => {
+    const muted = soundService.toggleMute();
+    setIsMuted(muted);
+    soundService.updateBGM(selectedTheme as any);
+  };
+
+  const handleStartStory = () => {
+    setLoading(true);
+    // Simulate a tiny delay for "magic" effect, but load instantly from data
+    setTimeout(() => {
+      const story = PREBUILT_STORIES[selectedAge][selectedTheme];
       setCurrentStory(story);
-    } catch (error) {
-      console.error("Failed to generate story:", error);
-      alert("Oops! The magic book is sleeping. Let's try again!");
-    } finally {
-      setIsGenerating(false);
-    }
+      setLoading(false);
+    }, 800);
   };
 
   const handleStoryComplete = () => {
@@ -63,6 +71,14 @@ export default function App() {
 
   return (
     <ThemeWrapper theme={selectedTheme}>
+      {/* Sound Toggle */}
+      <button
+        onClick={toggleSound}
+        className="fixed top-6 right-6 z-50 bg-white/80 backdrop-blur p-3 rounded-full shadow-lg hover:scale-110 transition-all border border-white/50"
+      >
+        {isMuted ? <VolumeX className="text-slate-400" /> : <Volume2 className="text-blue-500 animate-pulse" />}
+      </button>
+
       {!currentStory ? (
         <Dashboard
           stats={stats}
@@ -71,7 +87,7 @@ export default function App() {
           onSelectAge={setSelectedAge}
           onSelectTheme={setSelectedTheme}
           onStartStory={handleStartStory}
-          isGenerating={isGenerating}
+          loading={loading}
         />
       ) : (
         <StoryCard
