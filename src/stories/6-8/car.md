@@ -7,6 +7,7 @@ Text: The family is driving to the village in their green car. Oh no! A big bran
 Action Instruction: Tap the branch to see the problem
 Action Type: tap
 Action Target: Tree Branch
+Action Emoji: 🌿
 Image Prompt: A green car stopped on a dusty village road in Pakistan, a large tree branch blocking the way, fields in distance
 
 ## Scene 2
@@ -15,6 +16,7 @@ Action Instruction: Tap the branch 4 times to pull it away
 Action Type: multi-tap
 Action Count: 4
 Action Target: Heavy Branch
+Action Emoji: 💪
 Image Prompt: A Pakistani family (Dad, Mom, and two kids) pushing a branch together, teamwork, determination, rural aesthetic
 
 ## Scene 3
@@ -22,4 +24,5 @@ Text: The road is clear! Teamwork made the drive possible again.
 Action Instruction: Tap the car to drive to the village
 Action Type: tap
 Action Target: Green Car
+Action Emoji: 🚗
 Image Prompt: The family back in the car, waving, clear road ahead, sunset over Pakistani fields, warm and triumphant

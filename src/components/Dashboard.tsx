@@ -36,8 +36,19 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Header / Stats */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="text-center md:text-left">
-          <h1 className="font-display text-5xl md:text-6xl text-slate-800 mb-2">Assalam-u-Alaikum!</h1>
-          <p className="text-xl text-slate-600 font-medium">Which adventure should we go on today?</p>
+          <div className="flex items-center gap-4 mb-2 justify-center md:justify-start">
+             <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-4xl border-b-4 border-slate-200">
+               📖
+             </div>
+             <div>
+               <h1 className="font-display text-5xl md:text-6xl text-slate-800">Nanhi Dastaanain</h1>
+               <div className="flex flex-col text-slate-500 font-bold text-xs tracking-wider uppercase mt-1">
+                 <span>Choti Kahaniyan, Badi Soch</span>
+                 <span>Little Stories, Big Dreams</span>
+               </div>
+             </div>
+          </div>
+          <p className="text-xl text-slate-600 font-medium ml-20 hidden md:block">Which adventure should we go on today?</p>
         </div>
         
         <div className="flex gap-4">

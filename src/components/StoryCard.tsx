@@ -131,13 +131,13 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, onComplete, onExit }) => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleInteract}
-                  className="absolute bg-pink-500 text-white p-6 rounded-full shadow-2xl animate-bounce hover:bg-pink-600 transition-all z-20"
+                  className="absolute bg-white text-slate-800 p-6 rounded-full shadow-2xl animate-bounce hover:bg-slate-50 transition-all z-20 text-4xl flex items-center justify-center min-w-[80px] min-h-[80px]"
                   style={{ 
                     left: `${pos.x}%`, 
                     top: `${pos.y}%`,
                   }}
                 >
-                  <Heart fill="currentColor" size={32} />
+                  {scene.action.emoji || '❤️'}
                   <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white">
                     {i + 1}
                   </span>

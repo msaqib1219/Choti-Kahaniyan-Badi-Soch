@@ -8,6 +8,7 @@ Action Instruction: Tap the bells to hear them ring!
 Action Type: multi-tap
 Action Count: 3
 Action Target: Truck Bells
+Action Emoji: 🔔
 Image Prompt: Pakistani toy truck with bells and colorful art, little boy Omar playing, bright sun, 3D clay style
 
 ## Scene 2
@@ -15,6 +16,7 @@ Text: Sara wants to drive the truck to the imaginary market.
 Action Instruction: Help Omar share the truck driver's seat
 Action Type: tap
 Action Target: Driver Seat
+Action Emoji: 🪑
 Image Prompt: Two kids Omar and Sara sitting together with a large toy truck, planning a game, indoors, warm colors
 
 ## Scene 3
@@ -23,4 +25,5 @@ Action Instruction: Tap each child to take a turn
 Action Type: multi-tap
 Action Count: 2
 Action Target: Turn-taking
+Action Emoji: 🔄
 Image Prompt: Kids laughing and taking turns pushing a toy truck, playground setting, Pakistani park vibes, happy children

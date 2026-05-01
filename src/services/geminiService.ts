@@ -11,6 +11,7 @@ export interface Story {
       type: 'tap' | 'multi-tap' | 'sequence';
       count?: number;
       targetDesc: string;
+      emoji: string;
     };
     imagePrompt: string;
   }>;
