@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, Star, ArrowRight, RotateCcw, Volume2, Square } from 'lucide-react';
+import { Heart, Star, ArrowRight, RotateCcw, Volume2, Square, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { Story } from '../services/geminiService';
+import { Story, generateSpeech } from '../services/geminiService';
 import { soundService } from '../services/soundService';
 import { LanguageType } from '../types';
 
@@ -45,14 +45,15 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
     if (isPlayingVoice) {
       soundService.stopSpeaking();
       setIsPlayingVoice(false);
-    } else {
-      setIsPlayingVoice(true);
-      soundService.speak(displayText, language === 'ur' ? 'ur' : 'en');
-      
-      // We can't easily detect end of speech from here without more complex state logic
-      // in soundService, but setting a timeout or just letting the user toggle is fine.
-      // The soundService handles cancellation of previous utterances.
+      return;
     }
+
+    setIsPlayingVoice(true);
+    soundService.speak(
+      displayText, 
+      language === 'ur' ? 'ur' : 'en',
+      () => setIsPlayingVoice(false)
+    );
   };
 
   const handleNext = () => {
@@ -126,7 +127,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
       <div className="w-full flex justify-between items-center px-4">
         <h1 className={`font-display text-3xl text-slate-800 md:text-4xl ${isUrdu ? 'font-urdu' : ''}`}>{displayTitle}</h1>
         <div className="flex items-center gap-4 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-slate-200">
-           <button 
+          <button 
              onClick={handleSpeak}
              className={`flex items-center gap-2 px-4 py-1.5 rounded-full transition-all font-bold ${
                isPlayingVoice 
@@ -135,16 +136,15 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
              }`}
            >
              {isPlayingVoice ? (
-               <>
-                 <Square size={18} fill="currentColor" />
-                 <span className={isUrdu ? 'font-urdu' : ''}>{isUrdu ? 'روکیں' : 'Stop'}</span>
-               </>
+               <Square size={18} fill="currentColor" />
              ) : (
-               <>
-                 <Volume2 size={18} />
-                 <span className={isUrdu ? 'font-urdu text-base' : ''}>{isUrdu ? 'آواز سنیں' : 'Read Aloud'}</span>
-               </>
+               <Volume2 size={18} />
              )}
+             <span className={isUrdu ? 'font-urdu text-base' : ''}>
+               {isPlayingVoice 
+                 ? (isUrdu ? 'روکیں' : 'Stop') 
+                 : (isUrdu ? 'آواز سنیں' : 'Read Aloud')}
+             </span>
            </button>
            <div className="w-px h-6 bg-slate-200" />
            <span className="text-sm font-bold text-slate-500 uppercase tracking-widest">{isUrdu ? 'منظر' : 'Scene'} {currentScene + 1}/{story.scenes.length}</span>
@@ -166,11 +166,12 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, language, onComplete, onEx
                initial={{ scale: 1.1, opacity: 0.5 }}
                animate={{ scale: 1, opacity: 1 }}
                transition={{ duration: 1.5 }}
-               src={`https://picsum.photos/seed/${encodeURIComponent(story.title + currentScene)}/1200/800`}
+               src={scene.imageUrl || `https://picsum.photos/seed/${encodeURIComponent(story.title + currentScene)}/1200/800`}
                alt={scene.imagePrompt}
                className="w-full h-full object-cover"
                referrerPolicy="no-referrer"
              />
+             
              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
              
              {/* Interaction Targets */}

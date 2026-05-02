@@ -25,6 +25,7 @@ export const parseStoryMarkdown = (content: string): Story => {
       else if (line.startsWith('Action Target:')) currentScene.action.targetDesc = line.replace('Action Target:', '').trim();
       else if (line.startsWith('Action Emoji:')) currentScene.action.emoji = line.replace('Action Emoji:', '').trim();
       else if (line.startsWith('Image Prompt:')) currentScene.imagePrompt = line.replace('Image Prompt:', '').trim();
+      else if (line.startsWith('Image URL:')) currentScene.imageUrl = line.replace('Image URL:', '').trim();
     }
   });
 

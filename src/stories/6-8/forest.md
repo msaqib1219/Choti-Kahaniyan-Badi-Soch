@@ -14,6 +14,7 @@ Action Count: 4
 Action Target: Litter
 Action Emoji: 🚮
 Image Prompt: Two older children hiking in the Margalla Hills, Islamabad, beautiful green scenery, some plastic bottles on trail, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/forest_1.jpeg
 
 ## Scene 2
 Text: They put all the litter in bags. The forest starts to look green and clean again.
@@ -24,6 +25,7 @@ Action Type: tap
 Action Target: Clean Forest
 Action Emoji: ✨
 Image Prompt: Kids holding trash bags, looking proud, clean forest trail, tall trees, birds returning, bright morning light, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/forest_2.jpeg
 
 ## Scene 3
 Text: A deer comes to drink the clean water. They protected the forest home!
@@ -34,3 +36,4 @@ Action Type: tap
 Action Target: Forest Deer
 Action Emoji: 🦌
 Image Prompt: A beautiful deer drinking from a clean forest stream, kids watching quietly from afar, peaceful nature scene, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/forest_3.jpeg

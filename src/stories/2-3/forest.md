@@ -13,6 +13,7 @@ Action Type: tap
 Action Target: Little Sparrow
 Action Emoji: 🐦
 Image Prompt: A cute little sparrow bird sitting on a branch of a large Banyan tree, lush green forest, soft sunlight, 3D cartoon style, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/2-3/forest_1.jpg
 
 ## Scene 2
 Text: Zoya brings a small clay bowl (kundi) with cool water.
@@ -24,6 +25,7 @@ Action Count: 3
 Action Target: Water Bowl
 Action Emoji: 💧
 Image Prompt: A Pakistani girl in traditional clothes putting a small water bowl near a tree, friendly bird watching, soft watercolor style, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/2-3/forest_2.jpg
 
 ## Scene 3
 Text: The sparrow drinks the water. Chirp chirp! 'Thank you, Zoya!'
@@ -34,3 +36,4 @@ Action Type: tap
 Action Target: Happy Bird
 Action Emoji: 🎶
 Image Prompt: Happy sparrow drinking from a clay bowl, colorful flowers around, Zoya smiling in background, bright and cheerful, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/2-3/forest_3.jpg

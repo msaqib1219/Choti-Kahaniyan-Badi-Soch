@@ -13,6 +13,7 @@ Action Type: tap
 Action Target: Tree Branch
 Action Emoji: 🌿
 Image Prompt: A green car stopped on a dusty village road in Pakistan, a large tree branch blocking the way, fields in distance, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/car_1.jpeg
 
 ## Scene 2
 Text: Everyone gets out. 'If we pull together, we can move it!' says Abu.
@@ -24,6 +25,7 @@ Action Count: 4
 Action Target: Heavy Branch
 Action Emoji: 💪
 Image Prompt: A Pakistani family (Dad, Mom, and two kids) pushing a branch together, teamwork, determination, rural aesthetic, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/car_2.jpeg
 
 ## Scene 3
 Text: The road is clear! Teamwork made the drive possible again.
@@ -34,3 +36,4 @@ Action Type: tap
 Action Target: Green Car
 Action Emoji: 🚗
 Image Prompt: The family back in the car, waving, clear road ahead, sunset over Pakistani fields, warm and triumphant, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/car_3.jpeg

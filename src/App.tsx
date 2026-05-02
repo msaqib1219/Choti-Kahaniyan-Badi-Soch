@@ -3,7 +3,7 @@ import ThemeWrapper from './components/ThemeWrapper';
 import Dashboard from './components/Dashboard';
 import StoryCard from './components/StoryCard';
 import { ThemeType, AgeLevel, UserStats, INITIAL_BADGES, LanguageType } from './types';
-import { generateStory, Story } from './services/geminiService';
+import { generateStory, Story, generateSceneImage } from './services/geminiService';
 import { soundService } from './services/soundService';
 import { Volume2, VolumeX } from 'lucide-react';
 
@@ -51,6 +51,11 @@ export default function App() {
     }, 800);
   };
 
+  const handleGenerateAIStory = () => {
+    // AI functionality is disabled. Fallback to prebuilt immediately.
+    handleStartStory();
+  };
+
   const handleStoryComplete = () => {
     setStats(prev => {
       const newCount = prev.storiesCompleted + 1;
@@ -90,6 +95,7 @@ export default function App() {
           onSelectTheme={setSelectedTheme}
           onSelectLanguage={setSelectedLanguage}
           onStartStory={handleStartStory}
+          onGenerateAIStory={handleGenerateAIStory}
           loading={loading}
         />
       ) : (

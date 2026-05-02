@@ -13,6 +13,7 @@ Action Type: tap
 Action Target: Fishing Net
 Action Emoji: 🕸️
 Image Prompt: A traditional Pakistani wooden fishing boat with colorful carvings, fisherman on deck, deep blue sea, morning sun, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/sea_1.jpeg
 
 ## Scene 2
 Text: His neighbor had a bad day and caught nothing. Zubair shares half his catch.
@@ -24,6 +25,7 @@ Action Count: 3
 Action Target: Basket of Fish
 Action Emoji: 🐟
 Image Prompt: Fisherman handing a basket of fresh fish to another fisherman in a smaller boat, kindness, ocean waves, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/sea_2.jpeg
 
 ## Scene 3
 Text: By evening, the whole village had fish for dinner. Everyone was happy!
@@ -34,3 +36,4 @@ Action Type: tap
 Action Target: Village Dock
 Action Emoji: 🏮
 Image Prompt: A coastal village at twilight, lights reflecting on water, people gathering happily, peaceful ending, warm digital art, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/6-8/sea_3.jpeg

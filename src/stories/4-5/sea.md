@@ -14,6 +14,7 @@ Action Count: 3
 Action Target: Beach Rocks
 Action Emoji: 🪨
 Image Prompt: A cute crab looking sad on the beach, colorful sea shells and rocks, clear ocean water, 3D friendly style, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/4-5/sea_1.jpeg
 
 ## Scene 2
 Text: A friendly fish points to a shiny new shell. 'Look there!'
@@ -24,6 +25,7 @@ Action Type: tap
 Action Target: Golden Shell
 Action Emoji: 🐚
 Image Prompt: Brightly colored fish talking to a crab, underwater plants, bubbles, soft light, magical sea atmosphere, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/4-5/sea_2.jpeg
 
 ## Scene 3
 Text: Now Caspian has a safe new home. Thank you, Fishy!
@@ -34,3 +36,4 @@ Action Type: tap
 Action Target: New Shell Home
 Action Emoji: 🦀
 Image Prompt: Crab happily inside a new beautiful shell, coral reef background, happy fish friend nearby, children's book art, simple, clean, minimal background, kids storybook illustration, 16:9 aspect ratio
+Image URL: /images/4-5/sea_3.jpeg

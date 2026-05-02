@@ -13,6 +13,7 @@ interface DashboardProps {
   onSelectTheme: (theme: ThemeType) => void;
   onSelectLanguage: (lang: LanguageType) => void;
   onStartStory: () => void;
+  onGenerateAIStory: () => void;
   loading: boolean;
 }
 
@@ -25,6 +26,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onSelectTheme, 
   onSelectLanguage,
   onStartStory,
+  onGenerateAIStory,
   loading
 }) => {
   const isUrdu = selectedLanguage === 'ur';
@@ -37,7 +39,8 @@ const Dashboard: React.FC<DashboardProps> = ({
     ageSection: isUrdu ? 'میری عمر' : 'My Age',
     themeSection: isUrdu ? 'جادوئی دنیا' : 'Magic World',
     loading: isUrdu ? 'کتاب کھل رہی ہے...' : 'Opening Book...',
-    start: isUrdu ? 'چلو چلیں!' : "Let's Go!"
+    start: isUrdu ? 'چلو چلیں!' : "Let's Go!",
+    aiStory: isUrdu ? 'حیران کن کہانی' : 'Surprise Story'
   };
 
   const themes: { id: ThemeType; label: string; icon: string; color: string }[] = [
@@ -58,10 +61,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                📖
              </div>
              <div>
-               <h1 className="font-display text-5xl md:text-6xl text-slate-800">Nanhi Dastaanain</h1>
+               <h1 className={`font-display text-3xl md:text-4xl text-slate-800 ${isUrdu ? 'font-urdu' : ''}`}>
+                 {isUrdu ? 'چھوٹی کہانیاں، بڑی سوچ' : 'Choti Kahaniyan, Badi Soch'}
+               </h1>
                <div className={`flex flex-col text-slate-500 font-bold text-xs tracking-wider uppercase mt-1 ${isUrdu ? 'font-urdu' : ''}`}>
-                 <span>{isUrdu ? 'چھوٹی کہانیاں، بڑی سوچ' : 'Choti Kahaniyan, Badi Soch'}</span>
-                 <span>{isUrdu ? 'ننی داستانیں، بڑے خواب' : 'Little Stories, Big Dreams'}</span>
+                 {!isUrdu && <span>Little Stories, Big Dreams</span>}
                </div>
              </div>
           </div>
@@ -159,8 +163,8 @@ const Dashboard: React.FC<DashboardProps> = ({
         </section>
       </div>
 
-      {/* Start Button */}
-      <div className="flex justify-center mt-8">
+      {/* Action Buttons */}
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6 mt-8">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -169,7 +173,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             onStartStory();
           }}
           disabled={loading}
-          className={`group flex items-center gap-4 px-16 py-6 rounded-full font-display text-4xl shadow-2xl transition-all relative overflow-hidden ${
+          className={`group flex items-center gap-4 px-12 py-5 rounded-full font-display text-3xl shadow-2xl transition-all relative overflow-hidden ${
              loading ? 'bg-slate-400 cursor-wait' : 'bg-green-500 hover:bg-green-600 text-white'
           }`}
         >
@@ -190,8 +194,23 @@ const Dashboard: React.FC<DashboardProps> = ({
               </motion.span>
             </>
           )}
-          
           <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            soundService.play('click');
+            onGenerateAIStory();
+          }}
+          disabled={loading}
+          className={`group flex items-center gap-4 px-10 py-5 rounded-full font-display text-2xl shadow-xl transition-all border-2 ${
+             loading ? 'bg-slate-200 text-slate-400 cursor-wait border-transparent' : 'bg-white border-indigo-200 text-indigo-500 hover:border-indigo-500'
+          }`}
+        >
+          <Sparkles className={loading ? 'text-slate-400' : 'text-indigo-500 animate-pulse'} />
+          {t.aiStory}
         </motion.button>
       </div>
 

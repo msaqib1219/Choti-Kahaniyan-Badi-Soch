@@ -8,8 +8,8 @@ const BGM_URLS = {
 const SOUND_URLS = {
   click: 'https://assets.mixkit.co/active_storage/sfx/2567/2567-preview.mp3',
   interaction: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
-  success: 'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3',
-  transition: 'https://assets.mixkit.co/active_storage/sfx/2808/2808-preview.mp3',
+  success: 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3', // Clapping
+  transition: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3', // Soft Pop
   sparkle: 'https://assets.mixkit.co/active_storage/sfx/2434/2434-preview.mp3'
 };
 
@@ -20,6 +20,9 @@ class SoundService {
   private isMuted: boolean = false;
   private speechSynthesis: SpeechSynthesis | null = null;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
+  private onSpeechEndCallback: (() => void) | null = null;
+  private audioContext: AudioContext | null = null;
+  private currentBufferSource: AudioBufferSourceNode | null = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -31,51 +34,149 @@ class SoundService {
       this.speechSynthesis = window.speechSynthesis;
       
       // Ensure voices are loaded (some browsers load them asynchronously)
-      if (this.speechSynthesis?.onvoiceschanged !== undefined) {
-        this.speechSynthesis.onvoiceschanged = () => {
-          console.log('Voices loaded:', this.speechSynthesis?.getVoices().length);
-        };
+      if (this.speechSynthesis) {
+        this.speechSynthesis.getVoices(); // Trigger load
+        if (this.speechSynthesis.onvoiceschanged !== undefined) {
+          this.speechSynthesis.onvoiceschanged = () => {
+            console.log('Voices loaded:', this.speechSynthesis?.getVoices().length);
+          };
+        }
       }
     }
   }
 
-  speak(text: string, lang: 'en' | 'ur' = 'en') {
-    if (this.isMuted || !this.speechSynthesis) return;
+  speak(text: string, lang: 'en' | 'ur' = 'en', onComplete?: () => void) {
+    if (this.isMuted || !this.speechSynthesis) {
+      if (onComplete) onComplete();
+      return;
+    }
 
     this.stopSpeaking();
+    this.onSpeechEndCallback = onComplete || null;
 
     const utterance = new SpeechSynthesisUtterance(text);
     
     // Better voice detection
-    const voices = this.speechSynthesis.getVoices();
+    let voices = this.speechSynthesis.getVoices();
     
-    if (lang === 'ur') {
-      utterance.lang = 'ur-PK';
-      // Find Urdu voice
-      const urduVoice = voices.find(v => v.lang.startsWith('ur'));
-      if (urduVoice) utterance.voice = urduVoice;
-      utterance.pitch = 1.0;
-      utterance.rate = 0.85; // Slightly slower for clarity
-    } else {
-      utterance.lang = 'en-US';
-      const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
-      if (englishVoice) utterance.voice = englishVoice;
-      utterance.pitch = 1.1; // Friendly higher pitch
-      utterance.rate = 0.9;
-    }
+    const trySpeak = () => {
+      if (lang === 'ur') {
+        utterance.lang = 'ur-PK';
+        // Find Urdu voice
+        const urduVoice = voices.find(v => v.lang.startsWith('ur'));
+        if (urduVoice) utterance.voice = urduVoice;
+        utterance.pitch = 1.0;
+        utterance.rate = 0.85;
+      } else {
+        utterance.lang = 'en-US';
+        const englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Native')));
+        if (englishVoice) utterance.voice = englishVoice;
+        utterance.pitch = 1.1; 
+        utterance.rate = 0.95;
+      }
 
-    this.currentUtterance = utterance;
-    this.speechSynthesis.speak(utterance);
-    
-    utterance.onend = () => {
-      this.currentUtterance = null;
+      utterance.onend = () => {
+        this.currentUtterance = null;
+        if (this.onSpeechEndCallback) {
+          this.onSpeechEndCallback();
+          this.onSpeechEndCallback = null;
+        }
+      };
+
+      utterance.onerror = (event) => {
+        console.error('Speech error:', event);
+        this.currentUtterance = null;
+        if (this.onSpeechEndCallback) {
+          this.onSpeechEndCallback();
+          this.onSpeechEndCallback = null;
+        }
+      };
+
+      this.currentUtterance = utterance;
+      this.speechSynthesis!.speak(utterance);
     };
+
+    if (voices.length === 0) {
+      // Wait for voices if not loaded
+      const checkVoice = setInterval(() => {
+        voices = this.speechSynthesis!.getVoices();
+        if (voices.length > 0) {
+          clearInterval(checkVoice);
+          trySpeak();
+        }
+      }, 100);
+      
+      // Timeout after 1.5s
+      setTimeout(() => clearInterval(checkVoice), 1500);
+    } else {
+      trySpeak();
+    }
   }
 
   stopSpeaking() {
     if (this.speechSynthesis) {
       this.speechSynthesis.cancel();
-      this.currentUtterance = null;
+    }
+    if (this.currentBufferSource) {
+      this.currentBufferSource.stop();
+      this.currentBufferSource = null;
+    }
+    this.currentUtterance = null;
+    if (this.onSpeechEndCallback) {
+      const cb = this.onSpeechEndCallback;
+      this.onSpeechEndCallback = null;
+      cb();
+    }
+  }
+
+  async playBase64PCM(base64Data: string, onComplete?: () => void) {
+    if (this.isMuted) return;
+    this.stopSpeaking();
+    this.onSpeechEndCallback = onComplete || null;
+
+    try {
+      if (!this.audioContext) {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+      }
+      
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+
+      const binaryString = window.atob(base64Data);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+      }
+      
+      const arrayBuffer = bytes.buffer;
+      const audioBuffer = this.audioContext.createBuffer(1, arrayBuffer.byteLength / 2, 24000);
+      const channelData = audioBuffer.getChannelData(0);
+      const dataView = new DataView(arrayBuffer);
+      
+      for (let i = 0; i < channelData.length; i++) {
+          channelData[i] = dataView.getInt16(i * 2, true) / 32768.0;
+      }
+
+      const source = this.audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(this.audioContext.destination);
+      source.onended = () => {
+        if (this.currentBufferSource === source) {
+          this.currentBufferSource = null;
+          if (this.onSpeechEndCallback) {
+            const cb = this.onSpeechEndCallback;
+            this.onSpeechEndCallback = null;
+            cb();
+          }
+        }
+      };
+      source.start();
+      this.currentBufferSource = source;
+    } catch (err) {
+      console.error('Error playing PCM audio:', err);
+      if (onComplete) onComplete();
     }
   }
 
@@ -84,6 +185,15 @@ class SoundService {
     const sound = this.sounds.get(soundName);
     if (sound) {
       sound.currentTime = 0;
+      // Drastically lower volumes as requested
+      const volumes = {
+        click: 0.2,
+        interaction: 0.3,
+        success: 0.3,
+        transition: 0.1,
+        sparkle: 0.2
+      };
+      sound.volume = volumes[soundName] || 0.5;
       sound.play().catch(err => console.warn('Audio play blocked:', err));
     }
   }
